@@ -1,0 +1,70 @@
+name: Sync upstream MusicMagic plugin (public/9.2)
+
+# Watches Slim/Plugin/MusicMagic in LMS-Community/slimserver on the public/9.2
+# branch and opens a pull request in this repo whenever those files change
+# upstream. It never touches the actual 9.1 plugin code above - it only
+# updates the dev/ mirror folder, so you can review exactly what changed and
+# decide yourself what to port into the real plugin files.
+
+on:
+  schedule:
+    # Every Monday at 06:00 UTC. Adjust as needed.
+    - cron: '0 6 * * 1'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out this repo
+        uses: actions/checkout@v4
+
+      - name: Sparse-checkout the MusicMagic folder from upstream
+        run: |
+          git clone --filter=blob:none --no-checkout --branch public/9.2 --depth 1 \
+            https://github.com/LMS-Community/slimserver.git upstream-checkout
+          cd upstream-checkout
+          git sparse-checkout init --cone
+          git sparse-checkout set Slim/Plugin/MusicMagic
+          git checkout public/9.2
+          echo "UPSTREAM_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Mirror into dev/ reference folder
+        run: |
+          rm -rf dev
+          mkdir -p dev
+          cp -r upstream-checkout/Slim/Plugin/MusicMagic dev/
+          rm -rf upstream-checkout
+
+      - name: Check for changes
+        id: diff
+        run: |
+          if git status --porcelain dev | grep -q .; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open pull request with the upstream changes
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Sync upstream MusicMagic (public/9.2 @ ${{ env.UPSTREAM_COMMIT }})"
+          branch: sync-upstream-9.2
+          delete-branch: true
+          title: "Upstream MusicMagic changes (public/9.2 @ ${{ env.UPSTREAM_COMMIT }})"
+          body: |
+            Automated sync: `Slim/Plugin/MusicMagic` changed upstream in
+            [LMS-Community/slimserver](https://github.com/LMS-Community/slimserver/tree/public/9.2/Slim/Plugin/MusicMagic)
+            (commit `${{ env.UPSTREAM_COMMIT }}`).
+
+            This PR only updates the `dev/` reference mirror - it does **not**
+            touch the actual 9.1 plugin code in `Slim/Plugin/MusicMagic/` above.
+            Review the diff here to see what changed upstream, then manually
+            port whatever is relevant into the real plugin files.
+          labels: upstream-sync
