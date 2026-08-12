@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extensions>
 	<plugins>
-		<plugin name="MusicMagic" category="musicservices" version="1.0.0" minTarget="9.1" maxTarget="*">
+		<plugin name="MusicMagic" category="musicservices" version="1.0.1" minTarget="9.1" maxTarget="*">
 			<title lang="EN">MusicMagic</title>
 			<desc lang="EN">The complete Lyrion MusicMagic (MusicIP) plugin with Path Conversion, a configurable host, and genre filters added - for Lyrion 9.1.x.</desc>
-			<url>https://github.com/HB64/Lyrion-MusicMagic/releases/download/1.0.0/MusicMagic-1.0.0.zip</url>
+			<url>https://github.com/HB64/Lyrion-MusicMagic/releases/download/1.0.1/MusicMagic-1.0.1.zip</url>
 			<creator>HB64</creator>
 			<link>https://github.com/HB64/Lyrion-MusicMagic</link>
-			<sha>a3d8870a9dfdeb823e27fabbe1b152dafb2ac448</sha>
+			<sha>622c382f85581bcb0022bb2294adb354d9904e01</sha>
 		</plugin>
 	</plugins>
 </extensions>
