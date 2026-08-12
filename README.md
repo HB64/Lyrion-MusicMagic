@@ -13,9 +13,9 @@ The Lyrion maintainers only accept bugfixes into 9.1.x, not new features, so Pat
 
 ## How to use it
 
-This is currently a **manual file replacement**, not an installable plugin via Lyrion's Plugin Manager. Copy the files under `Slim/Plugin/MusicMagic/` in this repo over the same-named files in your Lyrion 9.1.x installation (back up the originals first), then restart the server.
+This is the **complete** MusicMagic plugin as it exists in `public/9.2` (all files, not just the changed ones), so it's a drop-in, opt-in replacement - copy the `Slim/Plugin/MusicMagic/` folder from this repo over the same folder in your Lyrion 9.1.x installation (back up the original first), then restart the server. Nothing else on your system is touched, and you don't lose any 9.1 functionality by doing this: it's the same plugin, just with Path Conversion and the genre-filter fixes already applied.
 
-An `install.xml` is included for reference/metadata, but turning this into something installable directly through Lyrion's Plugin Manager would require repackaging it under a separate `Plugins::` namespace (since it currently shares the same package names as the built-in plugin it replaces) - not done yet.
+An `install.xml` is included for reference/metadata. Turning this into something installable directly through Lyrion's Plugin Manager (with its own repository URL) would require repackaging it under a separate `Plugins::` namespace, since it currently shares the same package names as the built-in plugin it replaces - not done yet.
 
 ## `dev/`
 
