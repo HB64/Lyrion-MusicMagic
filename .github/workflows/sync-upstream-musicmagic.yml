@@ -49,22 +49,33 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Open pull request with the upstream changes
+      - name: Commit and push the updated mirror
         if: steps.diff.outputs.changed == 'true'
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "Sync upstream MusicMagic (public/9.2 @ ${{ env.UPSTREAM_COMMIT }})"
-          branch: sync-upstream-9.2
-          delete-branch: true
-          title: "Upstream MusicMagic changes (public/9.2 @ ${{ env.UPSTREAM_COMMIT }})"
-          body: |
-            Automated sync: `Slim/Plugin/MusicMagic` changed upstream in
-            [LMS-Community/slimserver](https://github.com/LMS-Community/slimserver/tree/public/9.2/Slim/Plugin/MusicMagic)
-            (commit `${{ env.UPSTREAM_COMMIT }}`).
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B sync-upstream-9.2
+          git add dev
+          git commit -m "Sync upstream MusicMagic (public/9.2 @ ${{ env.UPSTREAM_COMMIT }})"
+          git push --force origin sync-upstream-9.2
 
-            This PR only updates the `dev/` reference mirror - it does **not**
-            touch the actual 9.1 plugin code in `Slim/Plugin/MusicMagic/` above.
-            Review the diff here to see what changed upstream, then manually
-            port whatever is relevant into the real plugin files.
-          labels: upstream-sync
+      - name: Open or update the pull request via gh CLI
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BODY="Automated sync: \`Slim/Plugin/MusicMagic\` changed upstream in [LMS-Community/slimserver](https://github.com/LMS-Community/slimserver/tree/public/9.2/Slim/Plugin/MusicMagic) (commit \`${{ env.UPSTREAM_COMMIT }}\`).
+
+          This PR only updates the \`dev/\` reference mirror - it does **not** touch the actual 9.1 plugin code in \`Slim/Plugin/MusicMagic/\` above. Review the diff here to see what changed upstream, then manually port whatever is relevant into the real plugin files."
+
+          if gh pr view sync-upstream-9.2 >/dev/null 2>&1; then
+            gh pr edit sync-upstream-9.2 \
+              --title "Upstream MusicMagic changes (public/9.2 @ ${{ env.UPSTREAM_COMMIT }})" \
+              --body "$BODY"
+          else
+            gh pr create \
+              --title "Upstream MusicMagic changes (public/9.2 @ ${{ env.UPSTREAM_COMMIT }})" \
+              --body "$BODY" \
+              --base main \
+              --head sync-upstream-9.2
+          fi
