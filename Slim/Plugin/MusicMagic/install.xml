@@ -1,0 +1,15 @@
+<?xml version='1.0' standalone='yes'?>
+<extensions>
+  <name>MusicMagic (Path Conversion fork)</name>
+  <description>A fork of Lyrion Music Server's built-in MusicMagic (MusicIP) plugin for 9.1.x. Backports the Path Conversion feature and two genre-filter bugfixes that were contributed upstream into public/9.2 (see LMS-Community/slimserver PR #1629 and #1633).</description>
+  <creator>HB64</creator>
+  <version>1.0.0</version>
+  <module>Slim::Plugin::MusicMagic::Plugin</module>
+  <importmodule>Slim::Plugin::MusicMagic::Importer</importmodule>
+  <optionsURL>plugins/MusicMagic/settings/musicmagic.html</optionsURL>
+  <category>musicservices</category>
+  <targetApplication>
+    <minVersion>9.1.0</minVersion>
+    <maxVersion>9.1.99</maxVersion>
+  </targetApplication>
+</extensions>
