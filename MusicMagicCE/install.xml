@@ -1,0 +1,15 @@
+<?xml version='1.0' standalone='yes'?>
+<extensions>
+  <name>MusicMagicCE</name>
+  <description>The complete Lyrion MusicMagic (MusicIP) plugin for 9.1.x, with Path Conversion, a configurable host, and genre filters added.</description>
+  <creator>HB64</creator>
+  <version>1.0.0</version>
+  <module>Plugins::MusicMagicCE::Plugin</module>
+  <importmodule>Plugins::MusicMagicCE::Importer</importmodule>
+  <optionsURL>plugins/MusicMagicCE/settings/musicmagic.html</optionsURL>
+  <category>musicservices</category>
+  <targetApplication>
+    <minVersion>9.1.0</minVersion>
+    <maxVersion>9.1.99</maxVersion>
+  </targetApplication>
+</extensions>
