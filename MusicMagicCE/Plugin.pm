@@ -869,9 +869,7 @@ sub getMix {
 		($prefs->client($client)->get('mix_genre_filter') || $prefs->get('mix_genre_filter')) :
 		$prefs->get('mix_genre_filter');
 
-	# Defensive: guard against a non-arrayref value the same way as in
-	# Settings.pm - local hardening only, unrelated to this PR.
-	my $genreFilterHash = { map { lc($_) => 1 } @{ ref $genreFilter eq 'ARRAY' ? $genreFilter : [] } };
+	my $genreFilterHash = { map { lc($_) => 1 } @{ $genreFilter || [] } };
 
 	# genre exclusion happens after MusicIP has already picked the mix, so it can leave us
 	# short of the requested size - ask for extra up front so we've got a top-up pool to draw from

@@ -27,6 +27,7 @@ my %filterHash = ();
 my $prefs = preferences('plugin.musicip');
 
 $prefs->setValidate('num', qw(scan_interval port mix_variety mix_style reject_size));
+$prefs->setValidate('array', 'mix_genre_filter');
 
 $prefs->setChange(
 	sub {
