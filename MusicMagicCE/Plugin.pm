@@ -869,7 +869,9 @@ sub getMix {
 		($prefs->client($client)->get('mix_genre_filter') || $prefs->get('mix_genre_filter')) :
 		$prefs->get('mix_genre_filter');
 
-	my $genreFilterHash = { map { lc($_) => 1 } @{ $genreFilter || [] } };
+	# Guard against a non-arrayref value already stored on disk (setValidate
+	# only prevents new bad values, it doesn't repair existing prefs data).
+	my $genreFilterHash = { map { lc($_) => 1 } @{ ref $genreFilter eq 'ARRAY' ? $genreFilter : [] } };
 
 	# genre exclusion happens after MusicIP has already picked the mix, so it can leave us
 	# short of the requested size - ask for extra up front so we've got a top-up pool to draw from

@@ -77,7 +77,7 @@ sub checkDefaults {
 		path_conversion_enabled => 0,
 		path_conversion_source  => '',
 		path_conversion_dest    => '',
-	}, 'Plugins::MusicMagicCE::Prefs');
+	});
 }
 
 # Path Conversion - similar to the SugarCube LMS plugin's own feature of

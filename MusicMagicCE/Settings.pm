@@ -55,7 +55,11 @@ sub handler {
 	$params->{'genre_list'} = Plugins::MusicMagicCE::Common::getGenreList();
 
 	my ($classPrefs) = $class->prefs($client);
-	$params->{'mix_genre_filter'} = { map { $_ => 1 } @{ $classPrefs->get('mix_genre_filter') || [] } };
+
+	# Guard against a non-arrayref value already stored on disk (setValidate
+	# only prevents new bad values, it doesn't repair existing prefs data).
+	my $genreFilter = $classPrefs->get('mix_genre_filter');
+	$params->{'mix_genre_filter'} = { map { $_ => 1 } @{ ref $genreFilter eq 'ARRAY' ? $genreFilter : [] } };
 
 	return $class->SUPER::handler($client, $params);
 }
