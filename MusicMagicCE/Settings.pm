@@ -46,9 +46,15 @@ sub handler {
 		return undef;
 	}
 
-	if ( $params->{'saveSettings'} && (my $selected = $params->{'pref_mix_genre_filter'}) ) {
-		# make sure we always store an arrayref, even if only one genre is selected
-		$params->{'pref_mix_genre_filter'} = [ $selected ] unless ref $selected && ref $selected eq 'ARRAY';
+	if ( $params->{'saveSettings'} ) {
+		my $selected = $params->{'pref_mix_genre_filter'};
+
+		# An empty multi-select submits no value at all (undef), which
+		# means "no genres excluded", not "leave unchanged" - store an
+		# empty arrayref for that case. A single selection submits as a
+		# plain scalar rather than a one-item array; wrap it.
+		$params->{'pref_mix_genre_filter'} = !defined $selected ? []
+			: ( ref $selected eq 'ARRAY' ? $selected : [ $selected ] );
 	}
 
 	$params->{'filters'}    = Plugins::MusicMagicCE::Common->getFilterList();
